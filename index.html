@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>染整AI智能配色助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Microsoft Yahei", sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* 左侧侧边栏 */
+        .sidebar {
+            width: 260px;
+            background-color: #f7f8fa;
+            border-right: 1px solid #eee;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .new-chat-btn {
+            width: 100%;
+            height: 44px;
+            background-color: #1677ff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            margin-bottom: 25px;
+            transition: 0.2s;
+        }
+        .new-chat-btn:hover {
+            background-color: #0958d9;
+        }
+
+        .history-title {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+        .history-item {
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .history-item:hover {
+            background-color: #ebeef5;
+        }
+
+        /* 右侧主聊天区 */
+        .main-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-container {
+            flex: 1;
+            padding: 20px 40px;
+            overflow-y: auto;
+        }
+
+        .msg-item {
+            max-width: 800px;
+            margin: 20px auto;
+            display: flex;
+        }
+        .user-msg {
+            justify-content: flex-end;
+        }
+        .ai-msg {
+            justify-content: flex-start;
+        }
+
+        .msg-content {
+            padding: 14px 18px;
+            border-radius: 12px;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+        .user-msg .msg-content {
+            background-color: #1677ff;
+            color: #fff;
+        }
+        .ai-msg .msg-content {
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        /* 底部输入框区域 */
+        .input-wrap {
+            padding: 20px 40px 30px;
+            border-top: 1px solid #eee;
+        }
+        .input-box {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+        textarea {
+            flex: 1;
+            min-height: 48px;
+            max-height: 120px;
+            padding: 12px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 24px;
+            outline: none;
+            font-size: 15px;
+            resize: none;
+        }
+        .send-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: #1677ff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- 左侧栏 -->
+    <div class="sidebar">
+        <button class="new-chat-btn">+ 新建对话</button>
+        <div class="history-title">历史对话</div>
+        <div class="history-item">色卡配色咨询</div>
+        <div class="history-item">染料配比方案</div>
+        <div class="history-item">布料测色问答</div>
+    </div>
+
+    <!-- 右侧聊天区 -->
+    <div class="main-box">
+        <div class="chat-container" id="chatWrap">
+            <div class="msg-item ai-msg">
+                <div class="msg-content">
+                    你好！我是染整AI智能配色助手，可以帮你做颜色分析、染料配比、工艺咨询，也可以上传图片测色，请问有什么需要？
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部输入 -->
+        <div class="input-wrap">
+            <div class="input-box">
+                <textarea id="inputText" placeholder="在这里输入问题..."></textarea>
+                <button class="send-btn" onclick="sendChat()">发</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 发送消息
+        function sendChat() {
+            let text = document.getElementById('inputText').value.trim();
+            if(!text) return;
+
+            // 添加用户消息
+            let chatWrap = document.getElementById('chatWrap');
+            chatWrap.innerHTML += `
+                <div class="msg-item user-msg">
+                    <div class="msg-content">${text}</div>
+                </div>
+            `;
+            document.getElementById('inputText').value = '';
+            chatWrap.scrollTop = chatWrap.scrollHeight;
+
+            // AI模拟回复
+            setTimeout(()=>{
+                chatWrap.innerHTML += `
+                    <div class="msg-item ai-msg">
+                        <div class="msg-content">收到你的问题啦，我正在为你分析染整配色相关方案～</div>
+                    </div>
+                `;
+                chatWrap.scrollTop = chatWrap.scrollHeight;
+            }, 900);
+        }
+
+        // 回车发送
+        document.getElementById('inputText').addEventListener('keydown',function(e){
+            if(e.key === 'Enter' && !e.shiftKey){
+                e.preventDefault();
+                sendChat();
+            }
+        });
+    </script>
+</body>
+</html>
